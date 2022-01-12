@@ -1,0 +1,64 @@
+package ast
+
+// nodeType is used to declare the different possible types of AST nodes
+type nodeType int
+
+const (
+	TypeResource nodeType = iota
+	TypeIdentifier
+	TypeComment
+	TypeGroupComment
+	TypeResourceComment
+	TypeMessage
+	TypeTerm
+	TypeAttribute
+	TypePattern
+	TypeText
+	TypePlaceable
+	TypeStringLiteral
+	TypeNumberLiteral
+	TypeMessageReference
+	TypeTermReference
+	TypeVariableReference
+	TypeFunctionReference
+	TypeCallArguments
+	TypeNamedArgument
+	TypeSelectExpression
+	TypeVariant
+	TypeJunk
+)
+
+// IsEntry checks if a type represents an entry of a resource
+func IsEntry(typ nodeType) bool {
+	return IsComment(typ) || anyOf(typ, TypeMessage, TypeTerm)
+}
+
+// IsComment checks if a type represents any of the three comment types
+func IsComment(typ nodeType) bool {
+	return anyOf(typ, TypeComment, TypeGroupComment, TypeResourceComment)
+}
+
+// IsPatternElement checks if a type represents an element of a pattern
+func IsPatternElement(typ nodeType) bool {
+	return anyOf(typ, TypeText, TypePlaceable)
+}
+
+// IsExpression checks if a type represents an expression used in placeables
+func IsExpression(typ nodeType) bool {
+	return IsLiteral(typ) || anyOf(TypeMessageReference, TypeTermReference, TypeVariableReference, TypeFunctionReference, TypeSelectExpression)
+}
+
+// IsLiteral checks if a type represents a literal (text or number)
+func IsLiteral(typ nodeType) bool {
+	return anyOf(typ, TypeStringLiteral, TypeNumberLiteral)
+}
+
+// anyOf checks if the given type matches any of the specified other types
+func anyOf(typ nodeType, types ...nodeType) bool {
+	for _, toCompare := range types {
+		if typ == toCompare {
+			return true
+		}
+	}
+	return false
+}

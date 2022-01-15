@@ -1,31 +1,31 @@
 package ast
 
 // nodeType is used to declare the different possible types of AST nodes
-type nodeType int
+type nodeType string
 
 const (
-	TypeResource nodeType = iota
-	TypeIdentifier
-	TypeComment
-	TypeGroupComment
-	TypeResourceComment
-	TypeMessage
-	TypeTerm
-	TypeAttribute
-	TypePattern
-	TypeText
-	TypePlaceable
-	TypeStringLiteral
-	TypeNumberLiteral
-	TypeMessageReference
-	TypeTermReference
-	TypeVariableReference
-	TypeFunctionReference
-	TypeCallArguments
-	TypeNamedArgument
-	TypeSelectExpression
-	TypeVariant
-	TypeJunk
+	TypeResource          nodeType = "Resource"
+	TypeIdentifier        nodeType = "Identifier"
+	TypeComment           nodeType = "Comment"
+	TypeGroupComment      nodeType = "GroupComment"
+	TypeResourceComment   nodeType = "ResourceComment"
+	TypeMessage           nodeType = "Message"
+	TypeTerm              nodeType = "Term"
+	TypeAttribute         nodeType = "Attribute"
+	TypePattern           nodeType = "Pattern"
+	TypeText              nodeType = "TextElement"
+	TypePlaceable         nodeType = "Placeable"
+	TypeStringLiteral     nodeType = "StringLiteral"
+	TypeNumberLiteral     nodeType = "NumberLiteral"
+	TypeMessageReference  nodeType = "MessageReference"
+	TypeTermReference     nodeType = "TermReference"
+	TypeVariableReference nodeType = "VariableReference"
+	TypeFunctionReference nodeType = "FunctionReference"
+	TypeCallArguments     nodeType = "CallArguments"
+	TypeNamedArgument     nodeType = "NamedArgument"
+	TypeSelectExpression  nodeType = "SelectExpression"
+	TypeVariant           nodeType = "Variant"
+	TypeJunk              nodeType = "Junk"
 )
 
 // IsEntry checks if a type represents an entry of a resource

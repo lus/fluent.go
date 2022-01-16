@@ -3,19 +3,28 @@ package fluent
 import (
 	"fmt"
 	"github.com/lus/fluent.go/fluent/parser/ast"
+	"golang.org/x/text/language"
 	"strings"
 )
 
 // Bundle represents a collection of messages and terms collected from one or many resources.
 // It provides the main API to format messages.
 type Bundle struct {
+	locales  []language.Tag
 	messages map[string]*ast.Message
 	terms    map[string]*ast.Term
 }
 
 // NewBundle creates a new empty bundle
-func NewBundle() *Bundle {
+func NewBundle(primaryLocale language.Tag, fallbackLocales ...language.Tag) *Bundle {
+	locales := make([]language.Tag, 0, len(fallbackLocales)+1)
+	locales = append(locales, primaryLocale)
+	for _, fallback := range fallbackLocales {
+		locales = append(locales, fallback)
+	}
+
 	return &Bundle{
+		locales:  locales,
 		messages: make(map[string]*ast.Message),
 		terms:    make(map[string]*ast.Term),
 	}

@@ -109,6 +109,7 @@ func WithFunctions(functions map[string]Function) *FormatContext {
 	}
 }
 
+// TODO: Builtin functions (NUMBER, DATETIME)
 func assembleContexts(options ...*FormatContext) (map[string]Value, map[string]Function) {
 	variables := make(map[string]Value)
 	functions := make(map[string]Function)

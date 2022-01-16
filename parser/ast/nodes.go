@@ -65,7 +65,7 @@ type Term struct {
 type Attribute struct {
 	Base
 	ID    *Identifier
-	Value Node // Pattern (Text, Placeable)
+	Value *Pattern
 }
 
 // Pattern represents the pattern AST node consisting of text and placeables
@@ -137,7 +137,7 @@ type CallArguments struct {
 type NamedArgument struct {
 	Base
 	Name  *Identifier
-	Value Node // Expression (References & Select)
+	Value Node // Literal
 }
 
 // SelectExpression represents the select AST node
@@ -151,7 +151,7 @@ type SelectExpression struct {
 type Variant struct {
 	Base
 	Key     Node // Identifier or NumberLiteral
-	Value   Node // Pattern (Text, Placeable)
+	Value   *Pattern
 	Default bool
 }
 

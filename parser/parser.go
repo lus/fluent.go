@@ -36,7 +36,7 @@ func (parser *Parser) Parse() (*ast.Resource, []*Error) {
 			if pErr, ok := err.(*Error); ok {
 				errors = append(errors, pErr)
 			} else {
-				errors = append(errors, newError(-1, -1, err.Error()))
+				errors = append(errors, newError(0, 0, err.Error()))
 			}
 			continue
 		}

@@ -82,7 +82,7 @@ func (str *stream) Skip(n int) {
 		if str.source[str.curPos] == '\r' && str.source[str.curPos+1] == '\n' {
 			target++
 		}
-		if str.source[target] == '\r' && (target+1 < str.sourceLen && str.source[target+1] == '\n') {
+		if target < str.sourceLen-1 && str.source[target] == '\r' && str.source[target+1] == '\n' {
 			target++
 		}
 

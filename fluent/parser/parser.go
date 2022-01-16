@@ -1,7 +1,7 @@
 package parser
 
 import (
-	"github.com/lus/fluent.go/parser/ast"
+	"github.com/lus/fluent.go/fluent/parser/ast"
 	"math"
 	"strings"
 	"unicode"

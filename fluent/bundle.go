@@ -2,7 +2,7 @@ package fluent
 
 import (
 	"fmt"
-	"github.com/lus/fluent.go/parser/ast"
+	"github.com/lus/fluent.go/fluent/parser/ast"
 	"strings"
 )
 

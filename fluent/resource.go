@@ -1,8 +1,8 @@
 package fluent
 
 import (
-	"github.com/lus/fluent.go/parser"
-	"github.com/lus/fluent.go/parser/ast"
+	"github.com/lus/fluent.go/fluent/parser"
+	"github.com/lus/fluent.go/fluent/parser/ast"
 )
 
 // Resource represents a collection of messages and terms extracted out of a FTL source

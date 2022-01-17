@@ -95,10 +95,7 @@ bundle.AddResourceOverriding(resource)
 //
 // The third return value is an error that indicates that the whole formatting process failed.
 // This would be the case if there is no message with the given key.
-message, errs, fatalErr := bundle.FormatMessage(
-	"greeting",
-	fluent.WithVariable("subject", fluent.String("world")),
-)
+message, errs, fatalErr := bundle.FormatMessage("greeting", fluent.WithVariable("subject", "world"))
 // Error handling is recommended!
 
 fmt.Println(message)

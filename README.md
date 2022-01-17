@@ -4,7 +4,8 @@
 
 ## Important notice
 
-Even though the primary goal of this project is to exactly replicate the behaviour of the official Project Fluent implementations,
+Even though the primary goal of this project is to exactly replicate the behaviour of the official Project Fluent
+implementations,
 some key features are **not yet implemented**.
 
 These are:
@@ -18,7 +19,8 @@ These will, of course, be implemented as soon as possible.
 
 ## FTL Syntax
 
-If you are not familiar with Project Fluent and it's syntax, head over to the project's [Homepage](https://projectfluent.org) and read the well-written [Syntax Guide](https://projectfluent.org/fluent/guide).
+If you are not familiar with Project Fluent and it's syntax, head over to the project's
+[Homepage](https://projectfluent.org) and read the well-written [Syntax Guide](https://projectfluent.org/fluent/guide).
 
 ## Quickstart
 
@@ -105,9 +107,11 @@ fmt.Println(message)
 
 ### Further information
 
-For further information about how to use the API, head over to the [API reference](https://pkg.go.dev/github.com/lus/fluent.go/fluent).
+For further information about how to use the API head over to the
+[API reference](https://pkg.go.dev/github.com/lus/fluent.go/fluent).
 
 ## Bugs & Improvements
 
-Feel free to open an issue or pull request of you encounter any bugs or if you want to suggest something.
+Feel free to open an issue or pull request if you encounter any bugs or if you want to suggest something.
+
 You may also join my [Discord server](https://go.lus.pm/discord) if you prefer this way of communication.

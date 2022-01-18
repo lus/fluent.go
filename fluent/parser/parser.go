@@ -2,10 +2,12 @@ package parser
 
 import (
 	"github.com/lus/fluent.go/fluent/parser/ast"
-	"math"
 	"strings"
 	"unicode"
 )
+
+// Go 1.16 does not have the math.MaxInt constant
+const maxInt = int(^uint(0) >> 1)
 
 // Parser is used to parse a FTL source into an AST
 type Parser struct {
@@ -402,7 +404,7 @@ type indent struct {
 func (parser *Parser) parsePattern(block bool) (*ast.Pattern, error) {
 	start := uint(parser.str.CurrentCursorPos())
 
-	commonIndent := math.MaxInt
+	commonIndent := maxInt
 	var elements []ast.Node
 
 	// If the multiline text block does not start in the same line as the identifier, its indent has to be considered

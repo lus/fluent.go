@@ -17,6 +17,6 @@ func (err *Error) Error() string {
 func newError(start, end uint, msgFormat string, replacements ...interface{}) *Error {
 	return &Error{
 		Span:    [2]uint{start, end},
-		Message: fmt.Sprintf(msgFormat, replacements),
+		Message: fmt.Sprintf(msgFormat, replacements...),
 	}
 }

@@ -38,7 +38,6 @@ func (parser *Parser) Parse() (*ast.Resource, []*Error) {
 			} else {
 				errors = append(errors, newError(0, 0, err.Error()))
 			}
-			continue
 		}
 
 		// Blank space between entries is ignored
@@ -143,11 +142,26 @@ func (parser *Parser) parseEntryOrJunk() (ast.Node, error) {
 func (parser *Parser) parseEntry() (ast.Node, error) {
 	switch parser.str.Peek() {
 	case '#':
-		return parser.parseComment()
+		var toReturn ast.Node
+		comment, err := parser.parseComment()
+		if comment != nil {
+			toReturn = comment
+		}
+		return toReturn, err
 	case '-':
-		return parser.parseTerm()
+		var toReturn ast.Node
+		term, err := parser.parseTerm()
+		if term != nil {
+			toReturn = term
+		}
+		return toReturn, err
 	default:
-		return parser.parseMessage()
+		var toReturn ast.Node
+		msg, err := parser.parseMessage()
+		if msg != nil {
+			toReturn = msg
+		}
+		return toReturn, err
 	}
 }
 

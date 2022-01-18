@@ -67,7 +67,7 @@ func TestFixtures(t *testing.T) {
 		// Both maps have to match in order to pass the test
 		matches := reflect.DeepEqual(resourceMap, expectedOutputMap)
 		if !matches {
-			t.Fatal("produced output does not match the expectation")
+			t.Fatalf("produced output of fixture '%s' does not match the expectation", fileName)
 		}
 	}
 }

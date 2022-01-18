@@ -1,4 +1,6 @@
-# fluent.go &nbsp; [![Go Reference](https://pkg.go.dev/badge/github.com/lus/fluent.go/fluent.svg)](https://pkg.go.dev/github.com/lus/fluent.go/fluent)
+# fluent.go &nbsp; [![](https://pkg.go.dev/badge/github.com/lus/fluent.go/fluent.svg)](https://pkg.go.dev/github.com/lus/fluent.go/fluent) [![](https://github.com/lus/fluent.go/actions/workflows/test.yml/badge.svg)](https://github.com/lus/fluent.go/actions/workflows/test.yml) [![](https://bors.tech/images/badge_small.svg)](https://app.bors.tech/repositories/41488)
+
+
 
 `fluent.go` is a pure Go implementation of [Project Fluent](https://projectfluent.org)
 

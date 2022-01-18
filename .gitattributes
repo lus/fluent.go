@@ -1,0 +1,4 @@
+# When checking out the repo on Windows, Git will convert all line endings to CRLF.
+# This affects the test fixtures and thus breaks our tests.
+# Declaring them as binary will tell Git not to process them any further.
+*.ftl binary

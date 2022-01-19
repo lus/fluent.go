@@ -3,8 +3,19 @@ package fluent
 import (
 	"fmt"
 	"github.com/lus/fluent.go/fluent/parser/ast"
+	"golang.org/x/text/feature/plural"
 	"strconv"
+	"strings"
 )
+
+var pluralStrings = map[plural.Form]string{
+	plural.Other: "other",
+	plural.Zero:  "zero",
+	plural.One:   "one",
+	plural.Two:   "two",
+	plural.Few:   "few",
+	plural.Many:  "many",
+}
 
 // The resolver is used to resolve instances of ast.Pattern into instances of Value.
 // It uses context-relevant values and the initial Bundle for resolving specific values.
@@ -222,9 +233,8 @@ func (resolver *resolver) matchesVariant(selector, variant Value) bool {
 			return selNum.Value == varNum.Value
 		}
 		if varStr, ok := variant.(*StringValue); ok {
-			// varStr represents the plural category selNum has to match
-			// TODO: Implement plural categories
-			_ = varStr
+			category := pluralStrings[resolver.getPluralCategory(selNum.Value)]
+			return varStr.Value == category
 		}
 	}
 
@@ -255,4 +265,19 @@ func (resolver *resolver) assembleArguments(args *ast.CallArguments) (positional
 		named[arg.Name.Name] = resolver.resolveExpression(arg.Value)
 	}
 	return
+}
+
+func (resolver *resolver) getPluralCategory(value float32) plural.Form {
+	format := fmt.Sprintf("%.2f", value)
+	parts := strings.Split(strings.TrimRight(format, "0"), ".")
+
+	bytes := make([]byte, len(parts[0])+len(parts[1]))
+	for i, digit := range parts[0] {
+		bytes[i] = byte(digit - 48)
+	}
+	for i, digit := range parts[1] {
+		bytes[i+len(parts[0])] = byte(digit - 48)
+	}
+
+	return plural.Cardinal.MatchDigits(resolver.bundle.locales[0], bytes, len(parts[0]), len(parts[1]))
 }

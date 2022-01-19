@@ -12,7 +12,6 @@ some key features are **not yet implemented**.
 
 These are:
 
-* plural number forms (`one`, `few`, etc.)
 * date & time handling
 * locale-based number formatting (replica of `Intl.NumberFormat`)
 * the `NUMBER` and `DATETIME` builtin functions

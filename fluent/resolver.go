@@ -17,7 +17,7 @@ var pluralStrings = map[plural.Form]string{
 	plural.Many:  "many",
 }
 
-// The resolver is used to resolve instances of ast.Pattern into instances of Value.
+// The resolver is used to resolve instances of as t.Pattern into instances of Value.
 // It uses context-relevant values and the initial Bundle for resolving specific values.
 type resolver struct {
 	bundle    *Bundle

@@ -30,7 +30,7 @@ If you are not familiar with Project Fluent and it's syntax, head over to the pr
 First of all you need to add the `fluent` package to your module:
 
 ```shell
-go get -u https://github.com/lus/fluent.go/fluent
+go get -u github.com/lus/fluent.go/fluent
 ```
 
 ### Creating a `Resource`

@@ -28,48 +28,41 @@ type resolver struct {
 }
 
 func (resolver *resolver) resolveExpression(expression ast.Node) Value {
-	if id, ok := expression.(*ast.Identifier); ok {
-		return &StringValue{
-			Value: id.Name,
-		}
-	}
-	if placeable, ok := expression.(*ast.Placeable); ok {
-		return resolver.resolveExpression(placeable.Expression)
-	}
-	if strLiteral, ok := expression.(*ast.StringLiteral); ok {
-		return &StringValue{
-			Value: strLiteral.Value,
-		}
-	}
-	if numLiteral, ok := expression.(*ast.NumberLiteral); ok {
-		parsed, err := strconv.ParseFloat(numLiteral.Value, 32)
+	switch e := expression.(type) {
+	case *ast.Identifier:
+		return &StringValue{Value: e.Name}
+
+	case *ast.Placeable:
+		return resolver.resolveExpression(e.Expression)
+
+	case *ast.StringLiteral:
+		return &StringValue{Value: e.Value}
+
+	case *ast.NumberLiteral:
+		parsed, err := strconv.ParseFloat(e.Value, 32)
 		if err != nil {
 			resolver.errors = append(resolver.errors, err)
-			return &NoValue{
-				value: "[" + numLiteral.Value + "]",
-			}
+			return &NoValue{value: "[" + e.Value + "]"}
 		}
-		return &NumberValue{
-			Value: float32(parsed),
-		}
-	}
-	if ref, ok := expression.(*ast.MessageReference); ok {
-		return resolver.resolveMessageReference(ref)
-	}
-	if ref, ok := expression.(*ast.TermReference); ok {
-		return resolver.resolveTermReference(ref)
-	}
-	if ref, ok := expression.(*ast.VariableReference); ok {
-		return resolver.resolveVariableReference(ref)
-	}
-	if ref, ok := expression.(*ast.FunctionReference); ok {
-		return resolver.resolveFunctionReference(ref)
-	}
-	if expr, ok := expression.(*ast.SelectExpression); ok {
-		return resolver.resolveSelectExpression(expr)
-	}
-	return &NoValue{
-		value: "???",
+		return &NumberValue{Value: float32(parsed)}
+
+	case *ast.MessageReference:
+		return resolver.resolveMessageReference(e)
+
+	case *ast.TermReference:
+		return resolver.resolveTermReference(e)
+
+	case *ast.VariableReference:
+		return resolver.resolveVariableReference(e)
+
+	case *ast.FunctionReference:
+		return resolver.resolveFunctionReference(e)
+
+	case *ast.SelectExpression:
+		return resolver.resolveSelectExpression(e)
+
+	default:
+		return &NoValue{value: "???"}
 	}
 }
 

@@ -60,7 +60,7 @@ func (resolver *resolver) resolveExpression(expression ast.Node) Value {
 
 	case *ast.SelectExpression:
 		return resolver.resolveSelectExpression(e)
-		
+
 	default:
 		return &NoValue{value: "???"}
 	}

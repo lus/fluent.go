@@ -29,14 +29,11 @@ type resolver struct {
 
 func (resolver *resolver) resolveExpression(expression ast.Node) Value {
 	switch e := expression.(type) {
-	case *ast.Identifier:
-		return &StringValue{Value: e.Name}
-
 	case *ast.Placeable:
 		return resolver.resolveExpression(e.Expression)
 
 	case *ast.StringLiteral:
-		return &StringValue{Value: e.Value}
+		return strUnescape(e.Value)
 
 	case *ast.NumberLiteral:
 		parsed, err := strconv.ParseFloat(e.Value, 32)
@@ -60,6 +57,9 @@ func (resolver *resolver) resolveExpression(expression ast.Node) Value {
 
 	case *ast.SelectExpression:
 		return resolver.resolveSelectExpression(e)
+
+	// omitting ast.Identifier, cause it's not self-sufficient node, and works
+	// only with other types.
 
 	default:
 		return &NoValue{value: "???"}
@@ -151,27 +151,19 @@ func (resolver *resolver) resolveTermReference(ref *ast.TermReference) Value {
 }
 
 func (resolver *resolver) resolveVariableReference(ref *ast.VariableReference) Value {
-	var variable Value
 	if resolver.params != nil {
 		if val, set := resolver.params[ref.ID.Name]; set {
-			variable = val
-		} else {
-			return &NoValue{
-				value: "$" + ref.ID.Name,
-			}
+			return val
 		}
+		return &NoValue{"$" + ref.ID.Name}
 	} else if resolver.variables != nil {
 		if val, set := resolver.variables[ref.ID.Name]; set {
-			variable = val
+			return val
 		}
 	}
-	if variable == nil {
-		resolver.errors = append(resolver.errors, fmt.Errorf("unknown variable '$%s'", ref.ID.Name))
-		return &NoValue{
-			value: "$" + ref.ID.Name,
-		}
-	}
-	return variable
+
+	resolver.errors = append(resolver.errors, fmt.Errorf("unknown variable '$%s'", ref.ID.Name))
+	return &NoValue{"$" + ref.ID.Name}
 }
 
 func (resolver *resolver) resolveFunctionReference(ref *ast.FunctionReference) Value {

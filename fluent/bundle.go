@@ -2,9 +2,10 @@ package fluent
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/lus/fluent.go/fluent/parser/ast"
 	"golang.org/x/text/language"
-	"strings"
 )
 
 // Bundle represents a collection of messages and terms collected from one or many resources.
@@ -101,52 +102,42 @@ func WithVariables(variables map[string]interface{}) *FormatContext {
 }
 
 func resolveValue(value interface{}) Value {
-	if strVal, ok := value.(string); ok {
-		return String(strVal)
+	if v, ok := floatConvert(value); ok {
+		return &NumberValue{v}
+	} else {
+		return strUnescape(fmt.Sprint(value))
 	}
-	if strVal, ok := value.(*StringValue); ok {
-		return strVal
+}
+
+func floatConvert(v interface{}) (float32, bool) {
+	switch v := v.(type) {
+	case float32:
+		return v, true
+	case float64:
+		return float32(v), true
+	case uint:
+		return float32(v), true
+	case uint8:
+		return float32(v), true
+	case uint16:
+		return float32(v), true
+	case uint32:
+		return float32(v), true
+	case uint64:
+		return float32(v), true
+	case int:
+		return float32(v), true
+	case int8:
+		return float32(v), true
+	case int16:
+		return float32(v), true
+	case int32:
+		return float32(v), true
+	case int64:
+		return float32(v), true
+	default:
+		return 0, false
 	}
-	if float32Val, ok := value.(float32); ok {
-		return Number(float32Val)
-	}
-	if float64Val, ok := value.(float64); ok {
-		return Number(float32(float64Val))
-	}
-	if uintVal, ok := value.(uint); ok {
-		return Number(float32(uintVal))
-	}
-	if uint8Val, ok := value.(uint8); ok {
-		return Number(float32(uint8Val))
-	}
-	if uint16Val, ok := value.(uint16); ok {
-		return Number(float32(uint16Val))
-	}
-	if uint32val, ok := value.(uint32); ok {
-		return Number(float32(uint32val))
-	}
-	if uint64val, ok := value.(uint64); ok {
-		return Number(float32(uint64val))
-	}
-	if intVal, ok := value.(int); ok {
-		return Number(float32(intVal))
-	}
-	if int8Val, ok := value.(int8); ok {
-		return Number(float32(int8Val))
-	}
-	if int16Val, ok := value.(int16); ok {
-		return Number(float32(int16Val))
-	}
-	if int32val, ok := value.(int32); ok {
-		return Number(float32(int32val))
-	}
-	if int64val, ok := value.(int64); ok {
-		return Number(float32(int64val))
-	}
-	if numVal, ok := value.(*NumberValue); ok {
-		return numVal
-	}
-	return nil
 }
 
 // WithFunction creates a FormatContext with a single function

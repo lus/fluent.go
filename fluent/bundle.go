@@ -63,40 +63,23 @@ func (bundle *Bundle) AddResourceOverriding(resource *Resource) {
 	}
 }
 
-// A FormatContext holds variables and functions to pass them to Bundle.FormatMessage
-type FormatContext struct {
-	variables map[string]Value
-	functions map[string]Function
-}
+type formatOption func(*resolver)
 
 // WithVariable creates a FormatContext with a single variable
-func WithVariable(key string, value interface{}) *FormatContext {
-	resolved := resolveValue(value)
-	if resolved == nil {
-		return &FormatContext{
-			variables: nil,
-			functions: nil,
-		}
-	}
-	return &FormatContext{
-		variables: map[string]Value{strings.TrimSpace(key): resolved},
-		functions: nil,
-	}
+func WithVariable(key string, value interface{}) formatOption {
+	return WithVariables(map[string]interface{}{key: value})
 }
 
 // WithVariables creates a FormatContext with multiple variables
-func WithVariables(variables map[string]interface{}) *FormatContext {
-	cleaned := make(map[string]Value, len(variables))
-	for name, variable := range variables {
-		resolved := resolveValue(variable)
-		if resolved == nil {
-			continue
+func WithVariables(variables map[string]interface{}) formatOption {
+	return func(r *resolver) {
+		if r.variables == nil {
+			r.variables = make(map[string]Value, len(variables))
 		}
-		cleaned[strings.TrimSpace(name)] = resolved
-	}
-	return &FormatContext{
-		variables: cleaned,
-		functions: nil,
+
+		for name, variable := range variables {
+			r.variables[strings.TrimSpace(name)] = resolveValue(variable)
+		}
 	}
 }
 
@@ -150,42 +133,21 @@ func resolveValue(value interface{}) Value {
 }
 
 // WithFunction creates a FormatContext with a single function
-func WithFunction(key string, function Function) *FormatContext {
-	return &FormatContext{
-		variables: nil,
-		functions: map[string]Function{strings.TrimSpace(strings.ToUpper(key)): function},
-	}
+func WithFunction(k string, f Function) formatOption {
+	return WithFunctions(map[string]Function{k: f})
 }
 
 // WithFunctions creates a FormatContext with multiple functions
-func WithFunctions(functions map[string]Function) *FormatContext {
-	cleaned := make(map[string]Function, len(functions))
-	for name, function := range functions {
-		cleaned[strings.TrimSpace(strings.ToUpper(name))] = function
-	}
-	return &FormatContext{
-		variables: nil,
-		functions: cleaned,
-	}
-}
+func WithFunctions(functions map[string]Function) formatOption {
+	return func(r *resolver) {
+		if r.functions == nil {
+			r.functions = make(map[string]Function, len(functions))
+		}
 
-// TODO: Builtin functions (NUMBER, DATETIME)
-func assembleContexts(options ...*FormatContext) (map[string]Value, map[string]Function) {
-	variables := make(map[string]Value)
-	functions := make(map[string]Function)
-	for _, option := range options {
-		if option.variables != nil {
-			for key, variable := range option.variables {
-				variables[key] = variable
-			}
-		}
-		if option.functions != nil {
-			for key, function := range option.functions {
-				functions[key] = function
-			}
+		for name, function := range functions {
+			r.functions[strings.TrimSpace(name)] = function
 		}
 	}
-	return variables, functions
 }
 
 // FormatMessage formats the message with the given key.
@@ -194,20 +156,23 @@ func assembleContexts(options ...*FormatContext) (map[string]Value, map[string]F
 // and an optional error if there is no message with the given key.
 // If the resolver returns errors it does not automatically mean that the whole message could not be resolved.
 // It may be just incomplete.
-func (bundle *Bundle) FormatMessage(key string, contexts ...*FormatContext) (string, []error, error) {
+func (bundle *Bundle) FormatMessage(key string, options ...formatOption) (string, []error, error) {
 	if bundle.messages[key] == nil {
 		return "", nil, fmt.Errorf("message '%s' does not exist", key)
 	}
 
 	msg := bundle.messages[key]
-	variables, functions := assembleContexts(contexts...)
 	res := &resolver{
 		bundle:    bundle,
 		params:    nil,
-		variables: variables,
-		functions: functions,
+		variables: make(map[string]Value),
+		functions: make(map[string]Function),
 		errors:    []error{},
 	}
+	for _, opt := range options {
+		opt(res)
+	}
+
 	result := res.resolvePattern(msg.Value).String()
 	return result, res.errors, nil
 }

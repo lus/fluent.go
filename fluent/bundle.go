@@ -211,3 +211,8 @@ func (bundle *Bundle) FormatMessage(key string, contexts ...*FormatContext) (str
 	result := res.resolvePattern(msg.Value).String()
 	return result, res.errors, nil
 }
+
+// Checks whether the bundle contains a message with the given key.
+func (bundle *Bundle) HasMessage(key string) bool {
+    return bundle.messages[key] != nil
+}
